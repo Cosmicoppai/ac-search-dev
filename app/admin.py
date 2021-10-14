@@ -5,13 +5,13 @@ from .models import Post, Comment
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    search_fields = ['author']
-    list_filter = ['author', 'date']
-    list_display = ['author', 'text']
+    search_fields = ['comment_id', 'post_id', 'author']
+    list_filter = ['sub', 'author', 'date']
+    list_display = ['sub', 'author', 'text']
 
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    search_fields = ['author', 'title']
-    list_filter = ['author', 'title', 'date']
-    list_display = ['author', 'title']
+    search_fields = ['id', 'author', 'title']
+    list_filter = ['sub', 'author', 'title', 'date']
+    list_display = ['sub', 'author', 'title']

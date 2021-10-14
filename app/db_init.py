@@ -1,6 +1,6 @@
 from .models import Post, Comment
 
-Titles = ['What is Lorem Ipsum?',
+titles = ['What is Lorem Ipsum?',
           'Why do we use it?',
           'Where does it come from?',
           'Where can I get some?',
@@ -15,11 +15,13 @@ posts = [
     "Bitcoin は、2008年にサトシ・ナカモトという名前を使った無名の人物またはグループによって発明された、Peer to Peer型の暗号通貨である。この通貨は、その実装がオープンソースソフトウェアとして公開され、2009年に使用が開始された。"
 ]
 
+post_ids = ['p13kjw', 'p23kjw', 'p33kjw', 'p43kjw', 'p53kjw', 'p63kjw']
+comment_ids = ['h91hamgl', 'h2hamgl', 'h3hamgl']
 
 
 def create_dummy_data():
-    for title in Titles:
-        Post.objects.create(title=title, text=posts[0], author='dio')
+    for i in range(len(titles)):
+        Post.objects.create(id=post_ids[i], title=titles[i], text=posts[0], author='dio')
 
-    for comment in posts:
-        Comment.objects.create(text=comment, author='martin')
+    for j in range(len(posts)):
+        Comment.objects.create(comment_id=comment_ids[j],  post_id='p13kjw', text=posts[j], author='martin')

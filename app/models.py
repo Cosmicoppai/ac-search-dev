@@ -1,4 +1,5 @@
 from django.db import models
+from itertools import chain
 # from django.db import connection
 
 """
@@ -30,18 +31,18 @@ class CommentSearch:
 class CommentManager(models.Manager):
     def __init__(self):
         super(CommentManager, self).__init__()
-        self.query = "SELECT DISTINCT id, author, text, date FROM app_comment WHERE UPPER(text) LIKE UPPER(%s) ORDER BY date DESC"
+        self.query = "SELECT DISTINCT comment_id, post_id, sub, author, text, date FROM app_comment WHERE UPPER(text) LIKE UPPER(%s) ORDER BY date DESC"
 
 
     def search(self, search_text):
-        # qs = self.get_queryset()
         result = self.raw(self.query, (f'%{search_text}%',))
         return result
 
 
 class Comment(models.Model):
-    # sub = models.CharField(max_length=20, verbose_name='Subreddit', default='cryptocurrency')
-    # comment_id = models.CharField(max_length=35, verbose_name='comment id', primary_key=True, unique=True)
+    comment_id = models.CharField(max_length=32, verbose_name='comment id', unique=True, primary_key=True)
+    post_id = models.CharField(max_length=32, verbose_name='post id')
+    sub = models.CharField(max_length=32, verbose_name='Subreddit', default='cryptocurrency')
     author = models.CharField(max_length=60)
     text = models.TextField(max_length=10000)
     date = models.DateTimeField(auto_now_add=True)
@@ -52,7 +53,7 @@ class Comment(models.Model):
         get_latest_by = ['-date']
 
     def __str__(self):
-        return f"{self.author}   -   {self.text}"
+        return f"{self.sub} -   {self.author}   -   {self.text}"
 
     """
     @staticmethod
@@ -81,7 +82,7 @@ class PostSearch:
 class PostManager(models.Manager):
     def __init__(self):
         super(PostManager, self).__init__()
-        self.query = "SELECT DISTINCT id, author, title, text, date FROM app_post WHERE (UPPER(title) LIKE UPPER(%s) OR UPPER(text) LIKE UPPER(%s)) ORDER BY date DESC"
+        self.query = "SELECT DISTINCT id, sub, author, title, text, date FROM app_post WHERE (UPPER(title) LIKE UPPER(%s) OR UPPER(text) LIKE UPPER(%s)) ORDER BY date DESC"
 
     def search(self, search_text):
         result = self.raw(self.query, (f'%{search_text}%', f'%{search_text}%'))
@@ -90,8 +91,8 @@ class PostManager(models.Manager):
 
 
 class Post(models.Model):
-    # sub = models.CharField(max_length=20, verbose_name='Subreddit', default='cryptocurrency')
-    # post_id = models.CharField(max_length=35, verbose_name='post id', primary_key=True, unique=True)
+    id = models.CharField(max_length=32, verbose_name='post id', primary_key=True, unique=True)
+    sub = models.CharField(max_length=32, verbose_name='Subreddit', default='cryptocurrency')
     author = models.CharField(max_length=60)
     title = models.CharField(max_length=512)
     text = models.TextField(max_length=10000)
@@ -103,7 +104,7 @@ class Post(models.Model):
         get_latest_by = ['-date']
 
     def __str__(self):
-        return f"{self.author}   -   {self.title}"
+        return f"{self.sub} -   {self.author}   -   {self.title}"
 
     """
     @staticmethod
@@ -113,3 +114,24 @@ class Post(models.Model):
         """
 
     objects = PostManager()
+
+
+class Search:
+    def __init__(self, query, filter1=None, filter2=None):
+        self.filter1 = filter1
+        self.filter2 = filter2
+        self.post_result = Post.objects.none()
+        self.comment_result = Comment.objects.none()
+        self.query = query
+
+    def search_text(self):
+        if self.filter1 and self.filter2 is None:
+            self.post_result = Post.objects.search(self.query)
+        elif self.filter2 and self.filter1 is None:
+            self.comment_result = Comment.objects.search(self.query)
+        else:
+            self.post_result = Post.objects.search(self.query)
+            self.comment_result = Comment.objects.search(self.query)
+        queryset_chain = chain(self.post_result, self.comment_result)
+        qs = sorted(queryset_chain, key=lambda instance: instance.date, reverse=True)
+        return qs
