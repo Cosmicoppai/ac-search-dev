@@ -20,26 +20,4 @@ function switchTheme(e) {
 
 }
 
-
-
 toggleSwitch.addEventListener('change', switchTheme, false);
-$(document).ready(function () {
-    $("[data-bs-toggle=popover]").popover();
-    $("[data-bs-toggle=tooltip]").tooltip();
-    $('.nav-toggle').click(function () {
-        let collapse_content_selector = $(this).attr('href');
-        // console.log(collapse_content_selector)
-        let toggle_switch = $(this);
-        $(collapse_content_selector).toggle(function () {
-            if ($(this).css('display') == 'none' || $(this).text() == "Read More") {
-                $('#con').removeattr('hidden')
-                toggle_switch.html('Read More');
-            } else {
-                toggle_switch.html('Read Less');
-                $('#con').attr('hidden',true)
-            }
-        });
-
-    });
-
-});

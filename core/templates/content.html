@@ -11,136 +11,21 @@
                 <h4 class='my-0 py-0 ms-2 '>{{ count }} results for <b>{{ query }}</b></h4>
                 </div>
             {% endif %}
-            {% for object in object_list %}
-                {% with object|class_name as klass %}
-                    {% if klass == 'Post' %}
+
 <!--        POST ITEM -->
-            <li class="clearfix">
-                <div class="post-comments">
-                    <p class="meta">
+            <li class="clearfix" id="postBox"  >
 
-<!--                    COMMENT OR POST ICON -->
-                        <i class="far fa-newspaper"
-                           style="font-size: 1.4rem!important; margin-right: 10px;">
-                        </i>
-
-<!--                    USERNAME -->
-                        <i class="fas fa-user"></i>
-                        <a href="https://reddit.com/u/{{object.author}}" class="a-comment">
-                            <span class="">{{ object.author }}</span>
-                        </a>
-                        <span class="mx-1">|</span>
-
-<!--                     REDDIT LINK-->
-                        <i class="fas fa-sign-out-alt"></i>
-                        <a href="https://reddit.com/r/{{object.sub}}/comments/{{object.id}}" class="a-comment">
-                            <span class="">View on Reddit</span>
-                        </a>
-                    </p>
-                    <div class="row">
-
-<!--                    THUMBNAIL -->
-                        <div class="col-3  text-center">
-                            <img class="img thumbnail" width='75px' height="55px"
-                                 src="https://b.thumbs.redditmedia.com/qTtigz4VcFX0pzdOJnG5HLKvLt3uoEWr-vZ0rvNEteQ.jpg"  alt="post-image"/>
-                            <p class="text-muted mb-0 p-0">
-                                <small class="mx-1 "><i class="fas fa-thumbs-up"></i></small>
-                                <small class="mt-1">86</small>
-                            </p>
-                        </div>
-
-                        <div class="col-9">
-        <!--                SHORT CONTENT -->
-                            <!-- <span id="object-id">{{ object.id }}</span> -->
-                            <span id="short-content-{{ object.id }}" class="short-content text-break" >
-                                 {{ object.title }}
-                            </span>
-
-        <!--                FULL CONTENT -->
-                            <span id="full-content-{{ object.id }}" class="full-content text-break" style="display:none" >
-                                {{ object.text }}
-                            </span>
-
-        <!--                DOTS -->
-                            <!-- <span class="read-more-dots">...</span> -->
-
-
-        <!--                READ MORE AND DATE -->
-                            <div class="text-end mt-1 mx-2" style="font-size: 0.9rem;">
-                                <a href="#full-content-{{ object.id }}" class="nav-toggle text-muted mx-2" style="cursor:pointer" >
-                                    Read More
-                                </a>|
-                                <span class="text-muted">
-                                    {{ object.date }}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </li>
-            {% elif klass == 'Comment' %}
 
 <!--        COMMENT ITEM -->
-            <li class="clearfix">
-                <div class="post-comments">
-                    <p class="meta">
-
-<!--                    COMMENT OR POST ICON -->
-                        <i class="far fa-comments"
-                           style="font-size: 1.4rem!important; margin-right: 10px;">
-                        </i>
-
-<!--                    USERNAME -->
-                        <i class="fas fa-user"></i>
-                        <a href="https://reddit.com/u/{{object.author}}" class="a-comment">
-                            <span class="">{{object.author}}</span>
-                        </a>
-                        <span class="mx-1">|</span>
-
-<!--                     REDDIT LINK-->
-                        <i class="fas fa-sign-out-alt"></i>
-                        <a href="https://reddit.com/r/{{object.sub}}/comments/{{object.post_id}}/_/{{object.comment_id}}" class="a-comment">
-                            <span class="">View on Reddit</span>
-                        </a>
-                    </p>
-
-
-
-<!--                Short CONTENT -->
-                <span id=short-content-{{ object.comment_id }} class="short-content text-break" >
-                    {{ object.text }}
-                </span>
-
-<!--                FULL CONTENT -->
-                <span id=full-content-{{ object.comment_id }} class="full-content text-break" style="display:none" >
-                {{ object.text }}
-                </span>
-
-<!--                DOTS -->
-                <!-- <span class="read-more-dots">...</span> -->
-
-                    <!--                DOTS -->
-
-<!--                READ MORE AND DATE -->
-                    <div class="text-end mt-1 mx-2" style="font-size: 0.9rem;">
-                        <a href="#full-content-{{object.comment_id}}"  class="nav-toggle text-muted mx-2">
-                            Read More
-                        </a>|
-                        <span class="text-muted">
-                            {{ object.date }}
-                        </span>
-                    </div>
-                </div>
+            <li class="clearfix" id="commentBox" >
             </li>
-            {% endif %}
-            {% endwith %}
-            {% endfor %}
-        </ul>
-        <div class="pagination">
-                <span class="step-links">
 
+        </ul>
+        <div class="pagination" style = "display:none" id="pagination">
+                <span class="step-links">
                     <span class="current me-5 ms-2 ">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+
         </span>
 
         {% if page_obj.has_previous %}

@@ -1,5 +1,6 @@
 from django.db import models
 from itertools import chain
+from django.db.models import Q
 # from django.db import connection
 
 """
@@ -37,6 +38,11 @@ class CommentManager(models.Manager):
     def search(self, search_text, sub):
         result = self.raw(self.query, (f'%{search_text}%', sub))
         return result
+
+    def count_result(self, search_text, sub):
+        count = self.filter(Q(text__icontains=search_text),
+                            Q(sub__iexact=sub)).count()
+        return count
 
 
 class Comment(models.Model):
@@ -88,6 +94,10 @@ class PostManager(models.Manager):
         result = self.raw(self.query, (f'%{search_text}%', f'%{search_text}%', sub))
         return result
 
+    def count_result(self, search_text, sub):
+        count = self.filter(Q(title__icontains=search_text) | Q(text__icontains=search_text), Q(sub__iexact=sub)).count()
+        return count
+
 
 
 class Post(models.Model):
@@ -124,6 +134,15 @@ class Search:
         self.post_result = Post.objects.none()
         self.comment_result = Comment.objects.none()
 
+
+    def get_model(self):
+        if self.filter == 'p':  # if filter is p(posts)
+            return Post, None
+        if self.filter == 'c':  # if filter is c(comments)
+            return None, Comment
+        if self.filter == 'pc':  # if filter is pc(posts and comments)
+            return Post, Comment
+
     def search_text(self):
         if self.filter == 'p':  # if filter is p(posts)
             self.post_result = Post.objects.search(self.query, self.sub)
@@ -135,3 +154,13 @@ class Search:
         queryset_chain = chain(self.post_result, self.comment_result)
         qs = sorted(queryset_chain, key=lambda instance: instance.date, reverse=True)
         return qs
+
+    def count_result(self):
+        total_result = 0
+        _models = self.get_model()
+        for model in _models:
+            try:
+                print(model.objects.count_result(self.query, self.sub))
+                total_result += model.objects.count_result(self.query, self.sub)
+            except AttributeError:
+                pass
