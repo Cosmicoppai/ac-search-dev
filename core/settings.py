@@ -17,7 +17,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')  # Load the secret key from the enviro
 # DEBUG = debug_mode
 DEBUG = str(os.environ.get('DEBUG')) == '1'
 
-ALLOWED_HOSTS = [os.environ.get('HOST', 'localhost')]
+ALLOWED_HOSTS = [os.environ.get('HOST', 'localhost'),  '127.0.0.1']
 
 # Application definition
 
@@ -30,7 +30,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django.contrib.postgres',
-    
+
+    # 3rd party
+    # 'debug_toolbar',
     # Local
     'app'
     ]
@@ -40,6 +42,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
