@@ -21,7 +21,7 @@ comment_ids = ['h91hamgl', 'h2hamgl', 'h3hamgl']
 
 def create_dummy_data():
     for i in range(len(titles)):
-        Post.objects.create(post_id=post_ids[i], title=titles[i], text=posts[0], author='dio')
+        Post.objects.create(post_id=post_ids[i], title=titles[i], text=posts[0], username='dio')
 
     for j in range(len(posts)):
-        Comment.objects.create(comment_id=comment_ids[j],  post_id='p13kjw', text=posts[j], author='martin')
+        Comment.objects.create(comment_id=comment_ids[j],  post_id='p13kjw', text=posts[j], username='martin')
