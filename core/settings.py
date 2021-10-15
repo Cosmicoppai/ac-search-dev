@@ -17,7 +17,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')  # Load the secret key from the enviro
 # DEBUG = debug_mode
 DEBUG = str(os.environ.get('DEBUG')) == '1'
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [os.environ.get('HOST', 'localhost')]
 
 # Application definition
 
@@ -30,6 +30,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django.contrib.postgres',
+    
+    # Local
     'app'
     ]
 

@@ -7,11 +7,11 @@
                 Filters
             </span>
             <label class="btn btn-secondary">
-                <input class="align-middle" type="checkbox" checked autocomplete="off" name="filter1" value="posts">
+                <input class="align-middle" type="checkbox" checked autocomplete="off" name="f" value="p">
                 <span class="align-middle"> Posts</span>
             </label>
             <label class="btn btn-secondary">
-                <input class="align-middle" type="checkbox" autocomplete="off" name="filter2" value="comments">
+                <input class="align-middle" type="checkbox" autocomplete="off" name="f" value="c">
                 <span class="align-middle">Comments</span>
             </label>
         </div>
@@ -49,15 +49,15 @@
             <div class="input-group mb-3 text-center">
                     <span class="fs-5 ">
                             <label for="subreddits">
-<select class="form-select" id="subreddits" form="eiou_claim">
-    <option selected>r/CryptoCurrency</option>
+<select class="form-select" id="subreddits" form="eiou_claim" name="sub">
+    <option selected value="cryptocurrency">r/CryptoCurrency</option>
     <!-- <option value="cryptocurrency">CryptoCurrency</option> -->
 <!-- <option value="2">Two</option>
 <option value="3">Three</option> -->
 </select>
 </label>
                         </span>
-                <input type="text" class="form-control" id='search' name="search" placeholder="keyword">
+                <input type="text" class="form-control" id='search' name="q" placeholder="keyword">
             </div>
         </div>
     </div>
