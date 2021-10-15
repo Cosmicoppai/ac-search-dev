@@ -1,6 +1,6 @@
 from django.db import models
 from itertools import chain
-# from django.db import connection
+from django.db import connection
 
 """
 def dictfetchall(cursor):
