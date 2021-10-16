@@ -17,9 +17,9 @@ class SearchView(generic.TemplateView):
 
 
 class SearchApi(View):
-    paginate_by = 12
+    paginate_by = 4
     count = 0
-    paginate_orphans = 3
+    paginate_orphans = 1
 
     def get(self, *args, **kwargs):
         page_num = self.request.GET.get('page', 1)
@@ -34,9 +34,9 @@ class SearchApi(View):
         _query = self.request.GET.get('q')
         _filter = self.request.GET.get('f', None)
         _sub = self.request.GET.get('sub', None)
-        if _query is not None and _query != '':
-            if _filter is not None and _filter != '' and _sub:
-                qs = Search(query=_query, filter=_filter, sub=_sub).search_text
+        if _query and _query != '':
+            if _filter and _filter != '' and _sub:
+                qs = Search(query=_query, filter=_filter, sub=_sub).search_text()
                 self.count = len(qs)
                 return qs
         return Post.objects.none()
