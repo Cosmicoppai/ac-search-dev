@@ -1,16 +1,15 @@
 from .models import Search
 from django.utils.functional import cached_property
-import collections.abc
+from django.core.paginator import PageNotAnInteger, InvalidPage, EmptyPage
+from math import ceil
 
 
 class Paginator:
-    def __init__(self, per_page, orphans=0, **kwargs):
+    def __init__(self, queryset, per_page, orphans=0, total_result=0):
+        self.queryset = queryset
         self.per_page = per_page
         self.orphans = orphans
-        # self.query = kwargs['query']
-        # self.filter = kwargs['filter']
-        # self.sub = kwargs['sub']
-        self.search = Search(query=kwargs['query'], filter=kwargs['filter'], sub=kwargs['sub'])
+        self.total_result = total_result
 
     def validate_number(self, page_num):
         try:
@@ -40,25 +39,20 @@ class Paginator:
     def page(self, page_num):
         bottom = (page_num - 1) * self.per_page
         top = bottom + self.per_page
-        if top + self.orphans >= self.count:
-            top = self.count
-        return Page(page_num, self), self.search.search_text(bottom, top)  # limit the search from bottom to top
-
-    @cached_property
-    def count(self):
-        # will return the total no of result
-        return self.search.count_result()
+        if top + self.orphans >= self.total_result:
+            top = self.total_result
+        return Page(page_num, self), self.queryset[bottom:top]  # limit the search from bottom to top
 
     @cached_property
     def num_pages(self):
         """Return the total number of pages."""
-        if self.count == 0 and not self.allow_empty_first_page:
+        if self.total_result == 0 and not self.allow_empty_first_page:
             return 0
-        hits = max(1, self.count - self.orphans)
+        hits = max(1, self.total_result - self.orphans)
         return ceil(hits / self.per_page)
 
 
-class Page(collections.abc.Sequence):
+class Page:
 
     def __init__(self,  page_number, paginator):
         self.page_number = page_number
