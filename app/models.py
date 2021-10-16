@@ -2,7 +2,7 @@ from django.db import models
 from itertools import chain
 from django.db.models import Q
 # from django.db import connection
-from django.utils.functional import cached_property
+from django.utils.functional import cached_property, keep_lazy
 
 """
 def dictfetchall(cursor):
@@ -144,7 +144,7 @@ class Search:
         if self.filter == 'pc':  # if filter is pc(posts and comments)
             return Post, Comment
 
-    @cached_property
+    @keep_lazy(tuple)
     def search_text(self):
         if self.filter == 'p':  # if filter is p(posts)
             self.post_result = Post.objects.search(self.query, self.sub)
@@ -156,3 +156,16 @@ class Search:
         queryset_chain = chain(self.post_result, self.comment_result)
         qs = sorted(queryset_chain, key=lambda instance: instance.date, reverse=True)
         return qs
+
+    """
+    @cached_property
+    def count_result(self):
+        total_no_of_results = 0
+        _models = self.get_model()
+        for model in _models:
+            try:
+                total_no_of_results += model.objects.count_result(self.query, self.sub)
+            except AttributeError:
+                pass
+        return total_no_of_results
+        """

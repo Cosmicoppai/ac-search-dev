@@ -18,14 +18,14 @@ class Paginator:
                 raise ValueError
             page_num = int(page_num)
         except (TypeError, ValueError):
-            raise PageNotAnInteger(_('That page number is not an integer'))
+            raise PageNotAnInteger('That page number is not an integer')
         if page_num < 1:
-            raise EmptyPage(_('That page number is less than 1'))
+            raise EmptyPage('That page number is less than 1')
         if page_num > self.num_pages:
             if page_num == 1 and self.allow_empty_first_page:
                 pass
             else:
-                raise EmptyPage(_('That page contains no results'))
+                raise EmptyPage('That page contains no results')
         return page_num
 
     def get_page(self, page_num):
