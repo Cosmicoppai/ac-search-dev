@@ -8,23 +8,15 @@ class Serializer:
 
     def serialize(self):
         for item in self.queryset:
-            obj = {}
             if item.__class__.__name__ == 'Post':
-                obj['type'] = 'post'
-                obj['post_id'] = item.post_id
-                obj['title'] = item.title
-                obj['text'] = item.text
-                obj['username'] = item.username
-                obj['date'] = item.date
-                self.result.append(obj)
+                self.result.append(
+                    dict(type='post', post_id=item.post_id,
+                         title=item.title, text=item.text,
+                         username=item.username,date=item.date))
             else:
-                obj['type'] = 'comment'
-                obj['post_id'] = item.post_id
-                obj['comment_id'] = item.comment_id
-                obj['text'] = item.text
-                obj['username'] = item.username
-                obj['date'] = item.date
-                self.result.append(obj)
+                self.result.append(
+                    dict(type='comment', post_id=item.post_id,
+                         comment_id=item.comment_id,
+                         text=item.text, username=item.username,
+                         date=item.date))
         return self.result
-
-
