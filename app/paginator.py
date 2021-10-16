@@ -10,6 +10,7 @@ class Paginator:
         self.per_page = per_page
         self.orphans = orphans
         self.total_result = total_result
+        self.allow_empty_first_page = True
 
     def validate_number(self, page_num):
         try:
