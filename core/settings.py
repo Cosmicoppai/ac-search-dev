@@ -42,6 +42,15 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     ]
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+"""
+INTERNAL_IPS = [
+    # ...
+    '127.0.0.1',
+    # ...
+]
+"""
+
 ROOT_URLCONF = 'core.urls'
 TEMPLATE_DIR = os.path.join(CORE_DIR, "core/templates")  # ROOT dir for templates
 
