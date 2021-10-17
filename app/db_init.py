@@ -1,4 +1,5 @@
 from .models import Post, Comment
+from datetime import datetime
 
 titles = ['What is Lorem Ipsum?',
           'Why do we use it?',
@@ -38,7 +39,9 @@ comment_ids = ['h91hamgl', 'h2hamgl', 'h3hamgl']
 
 def create_dummy_data():
     for i in range(len(titles)):
-        Post.objects.create(post_id=post_ids[i], title=titles[i], text=posts[0], username='dio', image_url=img_url)
+        Post.objects.create(post_id=post_ids[i], title=titles[i], text=posts[0], username='dio', image_url=img_url,
+                            delete_date=datetime.now())
 
     for j in range(len(posts)):
-        Comment.objects.create(comment_id=comment_ids[j], post_id='p13kjw', text=posts[j], username='martin')
+        Comment.objects.create(comment_id=comment_ids[j], post_id='p13kjw', text=posts[j], username='martin',
+                               delete_date=datetime.now())
