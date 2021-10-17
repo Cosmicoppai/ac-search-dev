@@ -50,8 +50,9 @@ class Comment(models.Model):
     comment_id = models.CharField(max_length=32, verbose_name='comment id', unique=True, primary_key=True)
     post_id = models.CharField(max_length=32, verbose_name='post id')
     sub = models.CharField(max_length=32, verbose_name='Subreddit', default='cryptocurrency')
-    username = models.CharField(max_length=60)
+    username = models.CharField(max_length=60, verbose_name='username of the redditor')
     text = models.TextField(max_length=10000)
+    upvotes = models.IntegerField(default=0, verbose_name='no of upvotes')
     date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -107,6 +108,8 @@ class Post(models.Model):
     username = models.CharField(max_length=60)
     title = models.CharField(max_length=512)
     text = models.TextField(max_length=10000)
+    upvotes = models.IntegerField(default=0, verbose_name='no of upvotes')
+    image_url = models.URLField(blank=True, null=True, verbose_name="post image url")  # default max_length of 200 is used
     date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
