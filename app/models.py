@@ -58,9 +58,9 @@ class Comment(models.Model):
     delete_date = models.DateTimeField(verbose_name='date on which comment is deleted')
 
     class Meta:
-        ordering = ['-date']
+        ordering = ['-create_date']
         verbose_name_plural = "Comment's"
-        get_latest_by = ['-date']
+        get_latest_by = ['-create_date']
 
     def __str__(self):
         return f"{self.sub} -   {self.username}   -   {self.text}"
@@ -118,9 +118,9 @@ class Post(models.Model):
     delete_date = models.DateTimeField(verbose_name='date on which post is deleted')
 
     class Meta:
-        ordering = ['-date']
+        ordering = ['-create_date']
         verbose_name_plural = "Post's"
-        get_latest_by = ['-date']
+        get_latest_by = ['-create_date']
 
     def __str__(self):
         return f"{self.sub} -   {self.username}   -   {self.title}"
