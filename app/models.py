@@ -55,7 +55,7 @@ class Comment(models.Model):
     text = models.TextField(max_length=10000)
     upvotes = models.IntegerField(default=0, verbose_name='no of upvotes')
     create_date = models.DateTimeField(auto_now_add=True, verbose_name='date on which comment is created')
-    delete_date = models.DateTimeField(verbose_name='date on which comment is deleted')
+    delete_date = models.DateTimeField(blank=True, null=True, verbose_name='date on which comment is deleted')
 
     class Meta:
         ordering = ['-create_date']
@@ -115,7 +115,7 @@ class Post(models.Model):
     upvotes = models.IntegerField(default=0, verbose_name='no of upvotes')
     image_url = models.URLField(blank=True, null=True, verbose_name="post image url")  # default max_length of 200 is used
     create_date = models.DateTimeField(auto_now_add=True, verbose_name='date on which post is created')
-    delete_date = models.DateTimeField(verbose_name='date on which post is deleted')
+    delete_date = models.DateTimeField(blank=True, null=True, verbose_name='date on which post is deleted')
 
     class Meta:
         ordering = ['-create_date']
@@ -154,7 +154,7 @@ class Search:
             self.post_result = Post.objects.search(self.query, self.sub)
             self.comment_result = Comment.objects.search(self.query, self.sub)
         queryset_chain = chain(self.post_result, self.comment_result)
-        qs = sorted(queryset_chain, key=lambda instance: instance.date, reverse=True)
+        qs = sorted(queryset_chain, key=lambda instance: instance.create_date, reverse=True)
         return qs
 
     """
