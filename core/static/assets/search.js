@@ -308,7 +308,7 @@ function dataAppender(data, _sub) {
                 
     <!--                     REDDIT LINK-->
     <i class="fas fa-sign-out-alt"></i>
-    <a href=""https://reddit.com/r/${sub}/comments/${post_id}" target="_blank" class="a-comment">
+    <a href="https://reddit.com/r/${sub}/comments/${post_id}" target="_blank" class="a-comment">
     <span class="">View on Reddit</span>
     </a>
             </p>
@@ -318,7 +318,7 @@ function dataAppender(data, _sub) {
                 <div class="col-3  text-center">
                 <img class="img thumbnail" width='95px' height="75px"
                 src="${imageUrl}"  onerror="this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKIAAACiCAMAAAD1LOYpAAAATlBMVEX///+fn5+enp6bm5vh4eGmpqaqqqrw8PDn5+f19fXb29v39/eYmJijo6P7+/v5+fm/v7+wsLC4uLjr6+vS0tLIyMi7u7vGxsbOzs7W1tamCAMPAAAFRUlEQVR4nO2c6ZajIBCFG3AXN1zz/i86mogWiElai5jTw/0zfUw0nyXLrRLm58fJycnJycnJycnJycnJycnJ6Y8qjDx0RSEaXh61lU8ouohftR4KoScYZwyfkFLGOBXnIYueMkqsabx4X5wjjAW3CHiH5CI+RVjZJhzFxZk4ltw64BTH8jhhYrMZAkZ2uM8UAQOXQdd6+6zKTweRsixAFwGXPxrGTgaRZUMdpzGq0rhuifyBo60xlc+Z+dHBm3whL6PnnnQ9X4CyGzLaomF+1iw7Nl978hb9U2PrM4UyCuTYc0rofItBiky2KPbZjHisv8gO/QlEeh3i6DOTJ8bwcsTwJrJpyKeZaMyUFyOmgz/ZzDsA41lr6nPXIkYVB1PcCBkYOu2liF6m2zhGkq9C9AgjugyMFyKGwZZwmgP0TnMh4o4V5t3XIEZ0aYcUGsMNyXWI/RJERoMqWHNI3XRdhhgvLZFVXp7nYya+0xovQ/Tkc2ZzbpdLc6zb68sQb/OJdHGBoS+tZ/MdiAOXQVwOldLAt1+CKHnWziE7EOu/A7GRPNVySHYYNnwHojyRUjnjeUS2RXUOvAyxJrJHZ49fjnzZo6lqdy5DzKtlHCRl4iVlto6TaoXputmlWYzYOP9RMANytUNfiCh/+fHz65+bdPlCp3Njmp+dg9ho37vS0hrdGBd6WeRKxFRsGXm1ybAuzV1iwVXjTbnYJqqfQSySskwMxep8IACSctIail8fQazHXJTxqjZ9VGac3+uxnGel6RsfQYyCe5szJslTOaIUVVCJcqcY8QnEZWbbr5LmxZPqpn1Eb5nZxlH5SIXQOiIgXC3DVyEmasXhCKNlxESviZiKNlLhrTGNTHYRb3RTE2F0j7GZhp9q21qtIhoIJ0bzu4WBTV/m25ZgE7EBhAz8SXUvM6mXF9q0BIuIw2q2xrkXvLOmWv40Ku+XjzdRtocICAnvCmhrmM6Yl6AWqkfZGmILY9iNHbXoYBwV8593SrVWi7ItxB4SlvfpDYaKwnS+6LR6snoHdhDzEhL2uTwKUJajJme7nmMLUYkXX+OVw9iyR2ynpRU64Rp5W4hPWp3SQstpKgkFxIbtV17QAmIqdgk1RlH8hCCGLBMUfhrbQkyfj4DKaNl5kHActJU7mDMtdES4akcvZt7VrBPNtN5KIdRG0yq0gQgbPzXPxmDmpmDAnt82D2CqfDAiIypNa8cvGN3FaiThpzyosRHrQG1aeydtGGFaAz3mdBwVUSF85q91p8t9mJ7CXGJMdwo0xGJN9V4RahnNeLKaQHvwQn4TICFWP/X7hCojD/QUH94sJXKFyWnExFeb0AutFPPYoqiGK9HkvycRSZb9inBhpCbCe42FaDqNCIa47YMzauxcjDJDte6ucMN4GnEVC95cOBWWgR+0e1WMzeJSPERmfHBmpfGT5aeptkQXDXHvwR2Q5saxEBEJNZuOhcgF7tKxHjCiIAKrjKWWM0zEkfDoitx9rQYSARGmRIhq1pH3LKKSWGKqoThztJKM4ipFMmOEtq+/fEx4lvbkdo99/VeIf3q57ws5RAw5RAz9D4jfvw1CrpSkm4XEaDq7meQjW3JmF3BwS86ysYkeedX8jhJZQzi8ha2TGTnL2ihEl9cvhb7DmxU94Gmpjy4KFr8dfUzrIj9id6siF69hdvT9Gz6n1WmfYNRXNf5KptVp2Hq8jD2uT2zhPkc4dpmW2ISknGxegv1ekSDM1n8nwEiHs921Hio/Qw9glvlieKvm+57iOkJXbW2rq5OTk5OTk5OTk5OTk5OTk5PT1foHNFdUBRcYsyYAAAAASUVORK5CYII=';"/>
-                    <p class="text-muted mb-0 p-0">
+                    <p class="text-muted mb-0 me-5 p-0">
                     <small class="mx-1 "><i class="fas fa-thumbs-up"></i></small>
                     <small class="mt-1">${upVotes}</small>
                     </p>
@@ -403,7 +403,7 @@ function dataAppender(data, _sub) {
                 <div class="text-end mt-1 mx-2" style="font-size: 0.9rem;">
                 <p class =" float-start">
                 <small class="mx-1 "><i class="fas fa-thumbs-up"></i></small>
-                  <small class="mt-1 ">86</small>
+                  <small class="mt-1 ">${upVotes}</small>
                 </p>
                 <span class="text-muted" data-bs-toggle="tooltip" data-bs-placement="top" title="Created Date" style="font-size: 12px;">
                         ${date} ${hour}${minutes}
