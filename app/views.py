@@ -17,9 +17,9 @@ class SearchView(generic.TemplateView):
 
 
 class SearchApi(View):
-    paginate_by = 4
+    paginate_by = 25
     count = 0
-    paginate_orphans = 1
+    paginate_orphans = 4
 
     def get(self, *args, **kwargs):
         page_num = self.request.GET.get('page', 1)

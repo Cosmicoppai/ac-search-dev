@@ -12,11 +12,11 @@ class Serializer:
                 self.result.append(
                     dict(type='post', post_id=item.post_id,
                          title=item.title, text=item.text,
-                         username=item.username,date=item.date))
+                         upvotes=item.upvotes, image_url=item.image_url, username=item.username, date=item.date))
             else:
                 self.result.append(
                     dict(type='comment', post_id=item.post_id,
                          comment_id=item.comment_id,
-                         text=item.text, username=item.username,
+                         text=item.text, upvotes=item.upvotes, username=item.username,
                          date=item.date))
         return self.result
