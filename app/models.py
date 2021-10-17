@@ -33,7 +33,8 @@ class CommentSearch:
 class CommentManager(models.Manager):
     def __init__(self):
         super(CommentManager, self).__init__()
-        self.query = "SELECT DISTINCT comment_id, post_id, sub, username, text, date FROM app_comment WHERE UPPER(text) LIKE UPPER(%s) AND sub=%s ORDER BY date DESC"
+        self.query = "SELECT DISTINCT comment_id, post_id, sub, username, text, upvotes, date FROM app_comment " \
+                     "WHERE UPPER(text) LIKE UPPER(%s) AND sub=%s ORDER BY date DESC"
 
 
     def search(self, search_text, sub):
@@ -90,7 +91,9 @@ class PostSearch:
 class PostManager(models.Manager):
     def __init__(self):
         super(PostManager, self).__init__()
-        self.query = "SELECT DISTINCT post_id, sub, username, title, text, date FROM app_post WHERE (UPPER(title) LIKE UPPER(%s) OR UPPER(text) LIKE UPPER(%s)) AND sub=%s ORDER BY date DESC"
+        self.query = "SELECT DISTINCT post_id, sub, username, title, text, upvotes, image_url, " \
+                     "date FROM app_post WHERE (UPPER(title) LIKE UPPER(%s) OR " \
+                     "UPPER(text) LIKE UPPER(%s)) AND sub=%s ORDER BY date DESC"
 
     def search(self, search_text, sub):
         result = self.raw(self.query, (f'%{search_text}%', f'%{search_text}%', sub))
