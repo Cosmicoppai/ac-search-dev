@@ -40,10 +40,10 @@ function clearBox(elementID) {
 }
 
 function dataCollection(data) {
-    let previous = data.previous
+    let previous = data.prev
     let next = data.next
     let count = data.count
-    let paginatedValue = 4
+    let paginatedValue = 25
     let page = count / paginatedValue
     let precision = page.toPrecision(2);
     document.getElementById('results').innerHTML += count + ' results found'
@@ -56,11 +56,8 @@ function dataCollection(data) {
     if (previous == null) {
         pageNumber = 1;
     }
-    else if (previous == null) {
-        pageNumber = next - 1;
-    }
     else if (next == null) {
-        pageNumber = previous + 1;
+        pageNumber = totalPage;
     }
     else {
         pageNumber = next - 1;
@@ -74,7 +71,7 @@ function dataCollection(data) {
         document.getElementById('pagination').innerHTML += "Page " + pageNumber + " of " + totalPage;
     }
     document.getElementById('pagination').style.display = 'block';
-    if (count == paginatedValue) {
+    if (count <= paginatedValue) {
         document.getElementById('next').style.display = 'none';
         document.getElementById('last').style.display = 'none';
         document.getElementById('first').style.display = 'none';
@@ -110,7 +107,7 @@ function dataCollection(data) {
     document.getElementById('first').href = b
 }
 
-function apiCall(data) {
+function apiCall(data, _sub) {
     let datas = data.data
     // console.log(datas)
     let title;
@@ -120,7 +117,8 @@ function apiCall(data) {
     let text;
     let username;
     let date;
-    for (var i = 0; i < datas.length; i++) {
+    let sub = _sub;
+    for (let i = 0; i < datas.length; i++) {
         type = datas[i].type;
         post_id = datas[i].post_id;
         comment_id = datas[i].comment_id;
@@ -150,7 +148,7 @@ function apiCall(data) {
 
 <!--                     REDDIT LINK-->
             <i class="fas fa-sign-out-alt"></i>
-            <a href="https://reddit.com/r/sub/comments/${post_id}" class="a-comment">
+            <a href="https://reddit.com/r/${sub}/comments/${post_id}" class="a-comment">
                 <span class="">View on Reddit</span>
             </a>
         </p>
@@ -216,7 +214,7 @@ function apiCall(data) {
 
 <!--                     REDDIT LINK-->
                 <i class="fas fa-sign-out-alt"></i>
-                <a href="https://reddit.com/r/sub/comments/${post_id}/_/${comment_id}" class="a-comment">
+                <a href="https://reddit.com/r/${sub}/comments/${post_id}/_/${comment_id}" class="a-comment">
                     <span class="">View on Reddit</span>
                 </a>
             </p>
@@ -256,11 +254,11 @@ window.onload = () => {
     a = a.split('?').pop();
     // console.log(a)
     let c = a.split('q=').pop().split('&')[0]
-    // console.log(c)
+    var sub = a.split('sub=').pop().split('&')[0]
     let d = a.split('/').pop()
     let b = a.split('f=').pop()
-    if (c != '' && b[0] == "c" || b[0] == "p") {
-        button(a)
+    if (c != '' && (b[0] == "c" || b[0] == "p") && sub != '') {
+        button(a, sub)
         if (b[0] == 'c') {
             document.getElementById('comments').checked = true
             document.getElementById('posts').checked = false
@@ -310,7 +308,7 @@ function buttonClick() {
 
 }
 
-function button(url) {
+function button(url, sub) {
     fetch('/api?' + url, {
         method: 'GET',
         headers: {
@@ -321,7 +319,7 @@ function button(url) {
         .then(response => response.json())
         .then(data => {
             dataCollection(data);
-            apiCall(data);
+            apiCall(data, sub);
         });
 
 }
