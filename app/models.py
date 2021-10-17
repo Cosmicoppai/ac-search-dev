@@ -3,6 +3,7 @@ from itertools import chain
 from django.db.models import Q
 # from django.db import connection
 from django.utils.functional import cached_property, keep_lazy
+from django.utils.timezone import now
 
 """
 def dictfetchall(cursor):
@@ -114,7 +115,7 @@ class Post(models.Model):
     text = models.TextField(max_length=10000)
     upvotes = models.IntegerField(default=0, verbose_name='no of upvotes')
     image_url = models.URLField(blank=True, null=True, verbose_name="post image url")  # default max_length of 200 is used
-    create_date = models.DateTimeField(auto_now_add=True, verbose_name='date on which post is created')
+    create_date = models.DateTimeField(default=now, verbose_name='date on which post is created')
     delete_date = models.DateTimeField(blank=True, null=True, verbose_name='date on which post is deleted')
 
     class Meta:
@@ -154,6 +155,7 @@ class Search:
             self.post_result = Post.objects.search(self.query, self.sub)
             self.comment_result = Comment.objects.search(self.query, self.sub)
         queryset_chain = chain(self.post_result, self.comment_result)
+        # sort the whole queryset in reverse (i.e new post will come first)
         qs = sorted(queryset_chain, key=lambda instance: instance.create_date, reverse=True)
         return qs
 

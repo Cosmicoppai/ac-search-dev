@@ -47,6 +47,6 @@ class SearchApi(View):
 
 
 
-def test(requests):
+def test(request):
     create_dummy_data()
     return HttpResponse("<h1>Successfully created dummy data</h1>")
