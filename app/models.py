@@ -139,14 +139,6 @@ class Search:
         self.comment_result = Comment.objects.none()
 
 
-    def get_model(self):
-        if self.filter == 'p':  # if filter is p(posts)
-            return Post, None
-        if self.filter == 'c':  # if filter is c(comments)
-            return None, Comment
-        if self.filter == 'pc':  # if filter is pc(posts and comments)
-            return Post, Comment
-
     @keep_lazy(tuple)
     def search_text(self):
         if self.filter == 'p':  # if filter is p(posts)
@@ -161,6 +153,15 @@ class Search:
         return qs
 
     """
+    
+    def get_model(self):
+        if self.filter == 'p':  # if filter is p(posts)
+            return Post, None
+        if self.filter == 'c':  # if filter is c(comments)
+            return None, Comment
+        if self.filter == 'pc':  # if filter is pc(posts and comments)
+            return Post, Comment
+
     @cached_property
     def count_result(self):
         total_no_of_results = 0
