@@ -28,7 +28,7 @@ class SearchApi(View):
         previous = page.previous_page_number() if page.has_previous() else None
         next = page.next_page_number() if page.has_next() else None
         data = Serializer(queryset).serialize()
-        return JsonResponse({'count': self.count, 'previous': previous, 'next': next, 'data': data})
+        return JsonResponse({'count': self.count, 'prev': previous, 'next': next, 'data': data})
 
     def get_queryset(self):
         _query = self.request.GET.get('q')
