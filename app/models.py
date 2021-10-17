@@ -33,8 +33,8 @@ class CommentSearch:
 class CommentManager(models.Manager):
     def __init__(self):
         super(CommentManager, self).__init__()
-        self.query = "SELECT DISTINCT comment_id, post_id, sub, username, text, upvotes, date FROM app_comment " \
-                     "WHERE UPPER(text) LIKE UPPER(%s) AND sub=%s ORDER BY date DESC"
+        self.query = "SELECT DISTINCT comment_id, post_id, sub, username, text, upvotes, create_date, delete_date FROM app_comment " \
+                     "WHERE UPPER(text) LIKE UPPER(%s) AND sub=%s ORDER BY create_date DESC"
 
 
     def search(self, search_text, sub):
@@ -54,7 +54,8 @@ class Comment(models.Model):
     username = models.CharField(max_length=60, verbose_name='username of the redditor')
     text = models.TextField(max_length=10000)
     upvotes = models.IntegerField(default=0, verbose_name='no of upvotes')
-    date = models.DateTimeField(auto_now_add=True)
+    create_date = models.DateTimeField(auto_now_add=True, verbose_name='date on which comment is created')
+    delete_date = models.DateTimeField(verbose_name='date on which comment is deleted')
 
     class Meta:
         ordering = ['-date']
@@ -92,8 +93,8 @@ class PostManager(models.Manager):
     def __init__(self):
         super(PostManager, self).__init__()
         self.query = "SELECT DISTINCT post_id, sub, username, title, text, upvotes, image_url, " \
-                     "date FROM app_post WHERE (UPPER(title) LIKE UPPER(%s) OR " \
-                     "UPPER(text) LIKE UPPER(%s)) AND sub=%s ORDER BY date DESC"
+                     "create_date, delete_date FROM app_post WHERE (UPPER(title) LIKE UPPER(%s) OR " \
+                     "UPPER(text) LIKE UPPER(%s)) AND sub=%s ORDER BY create_date DESC"
 
     def search(self, search_text, sub):
         result = self.raw(self.query, (f'%{search_text}%', f'%{search_text}%', sub))
@@ -113,7 +114,8 @@ class Post(models.Model):
     text = models.TextField(max_length=10000)
     upvotes = models.IntegerField(default=0, verbose_name='no of upvotes')
     image_url = models.URLField(blank=True, null=True, verbose_name="post image url")  # default max_length of 200 is used
-    date = models.DateTimeField(auto_now_add=True)
+    create_date = models.DateTimeField(auto_now_add=True, verbose_name='date on which post is created')
+    delete_date = models.DateTimeField(verbose_name='date on which post is deleted')
 
     class Meta:
         ordering = ['-date']
