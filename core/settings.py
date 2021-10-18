@@ -1,21 +1,17 @@
 import os
 from pathlib import Path
-from .secrets import *
+# from .secrets import *
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 CORE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
+SECRET_KEY = os.environ.get('SECRET_KEY')  # Load the secret key from the environment
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = secret_key
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = debug_mode
+DEBUG = str(os.environ.get('DEBUG')) == '1'
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [os.environ.get('HOST', 'localhost'),  '127.0.0.1']
 
 # Application definition
 
@@ -27,6 +23,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django.contrib.postgres',
+
+    # 3rd party
+    # 'debug_toolbar',
+    # Local
     'app'
     ]
 
@@ -35,10 +36,20 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     ]
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+"""
+INTERNAL_IPS = [
+    # ...
+    '127.0.0.1',
+    # ...
+]
+"""
 
 ROOT_URLCONF = 'core.urls'
 TEMPLATE_DIR = os.path.join(CORE_DIR, "core/templates")  # ROOT dir for templates
@@ -66,10 +77,14 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-        }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': '5432',
     }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
