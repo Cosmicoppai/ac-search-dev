@@ -1,0 +1,9 @@
+# robots.txt file for ac-search
+
+User-Agent: *
+Disallow: /api
+Disallow: /admin
+Allow: /
+Allow: /search
+
+Sitemap: https://domain.com/sitemap.xml
