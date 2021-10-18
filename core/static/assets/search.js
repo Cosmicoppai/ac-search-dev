@@ -11,7 +11,7 @@ function validation() {
     else {
         search.style.border = '0.6px solid #808080'
     }
-    if( post.checked === false && comment.checked === false){
+    if (post.checked == false && comment.checked == false) {
         postValid.style.border = '2px solid red'
         commentValid.style.border = '2px solid red'
     }
@@ -38,7 +38,6 @@ window.onload = () => {
 
     //to check the conditions before calling the api
     if (query !== '' && (filter[0] == "c" || filter[0] == "p") && sub !== '') {
-        apiCall(url, sub)
         if (filter[0] === 'c') {
             document.getElementById('comments').checked = true
             document.getElementById('posts').checked = false
@@ -48,6 +47,8 @@ window.onload = () => {
             document.getElementById('posts').checked = true
         }
         document.getElementById('search').value = query;
+        document.getElementById('subreddits').value = sub;
+        apiCall(url, sub)
         validation();
     }
 }
@@ -62,32 +63,34 @@ function buttonClick() {
     let search = document.getElementById('search').value;
     let post = document.getElementById('posts');
     let comment = document.getElementById('comments');
-    let sub = document.getElementById('subreddits').value;
+    let form = document.getElementById('subreddits').value;
     let filterValue;
 
     //to check the conditions before pushing the url
     if (post.checked && comment.checked) {
         filterValue = 'pc'
     }
-    else if (post.checked ) {
+    else if (post.checked) {
         filterValue = 'p'
     }
-    else if (comment.checked ) {
+    else if (comment.checked) {
         filterValue = 'c'
     }
+
     //to check the conditions before calling the api
-    if (search != '' && filterValue && sub ){
-    history.pushState(null, "", '/search?f=' + filterValue + '&sub=' + sub + '&q=' + search + '&page=1');
+    if (search != '' && (post.checked || comment.checked) && form!= '' ) {
+        history.pushState(null, "", '/search?f=' + filterValue + '&sub=' + form + '&q=' + search + '&page=1');
         let url = window.location.href
         url = url.split('?').pop();
         apiCall(url)
     }
-    else validation()
+    else validation();
 }
 
 // api call function
 function apiCall(url, sub) {
     validation()
+    document.getElementById('loading').style.display="block";
     fetch('/api?' + url, {
         method: 'GET',
         headers: {
@@ -97,6 +100,7 @@ function apiCall(url, sub) {
     })
         .then(response => response.json())
         .then(data => {
+         document.getElementById('loading').style.display="none";
             dataCollection(data);
             dataAppender(data, sub);
         });
@@ -108,10 +112,14 @@ function dataCollection(data) {
     let previous = data.prev
     let next = data.next
     let count = data.count
-    let paginatedValue = 25
+    let paginatedValue = 25;
+    let paginatedOrphan = 4;
     let totalPage;
     let pageNumber;
-
+    document.getElementById('next').style.display = 'block';
+    document.getElementById('last').style.display = 'block';
+    document.getElementById('first').style.display = 'block';
+    document.getElementById('previous').style.display = 'block';
     //for result found in the content section
     if (count != 0) {
         document.getElementById('results').innerHTML += count + ' results found'
@@ -120,11 +128,25 @@ function dataCollection(data) {
     // to find the page number and total pages
     let page = count / paginatedValue
     let precision = page.toPrecision(2);
+    let precisionDecimalval = precision - Math.floor(precision);
+
+    //if remaining objects in database is less than or equal to paginatedOrphan + paginatedValue then count of data will be
+    //paginatedValue + paginatedOrphan
+    let n = Math.floor((paginatedValue+paginatedOrphan)/paginatedValue)
+    n = ((paginatedValue+paginatedOrphan)/paginatedValue) - n
+
+    //Calculation for total pages
     if (precision <= 1) {
         totalPage = 1;
     }
-    else {
-        totalPage = Math.round(precision)
+    //to compare the decimal values of precision and n because the decimal values of precision is less than or equal to the value of n
+    else if(precisionDecimalval <= n) {
+       totalPage = Math.floor(precision)
+    //    console.log(totalPage)
+    }
+    else{
+        totalPage = Math.ceil(precision)
+        // console.log(totalPage)
     }
     if (previous == null) {
         pageNumber = 1;
@@ -138,6 +160,10 @@ function dataCollection(data) {
     if (count == 0) {
         document.getElementById('pagination').innerHTML += "No results!!!";
         document.getElementById('pagination').style.fontSize = '50px';
+        document.getElementById('next').style.display = 'none';
+        document.getElementById('last').style.display = 'none';
+        document.getElementById('first').style.display = 'none';
+        document.getElementById('previous').style.display = 'none';
     }
     else {
         document.getElementById('pagination').innerHTML += "Page " + pageNumber + " of " + totalPage;
@@ -145,55 +171,35 @@ function dataCollection(data) {
     document.getElementById('pagination').style.display = 'block';
 
     // to show next,last,previous and first button according to the requirements
-    if (count <= paginatedValue) {
-        document.getElementById('pagination').style.marginLeft = '150px'
-        document.getElementById('next').style.display = 'none';
-        document.getElementById('last').style.display = 'none';
-        document.getElementById('first').style.display = 'none';
-        document.getElementById('previous').style.display = 'none';
-    }
+    if(previous == null && next == null){
+       document.getElementById('next').style.display = 'none';
+       document.getElementById('last').style.display = 'none';
+       document.getElementById('first').style.display = 'none';
+       document.getElementById('previous').style.display = 'none';
+   }
     else if (previous == null) {
-        document.getElementById('pagination').style.marginLeft = '-30px'
-        document.getElementById('next').style.marginLeft = '385px'
-        document.getElementById('next').style.display = 'block';
-        document.getElementById('last').style.display = 'block';
-        document.getElementById('first').style.display = 'None';
-        document.getElementById('previous').style.display = 'None';
+        document.getElementById('first').style.pointerEvents ='none'
+        document.getElementById('previous').style.pointerEvents ='none'
     }
     else if (next == null) {
-        document.getElementById('pagination').style.marginLeft = '233px'
-        document.getElementById('first').style.marginLeft = '20px'
-        document.getElementById('next').style.display = 'None';
-        document.getElementById('last').style.display = 'None';
-        document.getElementById('first').style.display = 'block';
-        document.getElementById('previous').style.display = 'block';
-    }
-    else {
-        // document.getElementById('pagination').style.marginLeft = '10px'
-        document.getElementById('next').style.marginLeft = '130px'
-        document.getElementById('first').style.marginLeft = '20px'
-        document.getElementById('next').style.display = 'block';
-        document.getElementById('last').style.display = 'block';
-        document.getElementById('first').style.display = 'block';
-        document.getElementById('previous').style.display = 'block';
+        document.getElementById('next').style.pointerEvents ='none'
+        document.getElementById('last').style.pointerEvents ='none'
     }
 
     //to send href to the a tag of next,last,previous and first according to the page number
     let b = window.location.href
     b = b.replace(/&page.+$/, `&page=${pageNumber + 1}`)
+    // console.log(b)
     document.getElementById('next').href = b
-    //
     b = b.replace(/&page.+$/, `&page=${totalPage}`)
     document.getElementById('last').href = b
-    //
     b = b.replace(/&page.+$/, `&page=${pageNumber - 1}`)
     document.getElementById('previous').href = b
-    //
     b = b.replace(/&page.+$/, `&page=1`)
     document.getElementById('first').href = b
 }
 
-// function to control read more and read less inside the div
+// function to control readmore and read less inside the div
 function myFunction(id) {
     let dots = document.querySelector(` .card[data="${id}"] .dots`);
     let moreText = document.querySelector(`.card[data="${id}"] .more`);
@@ -249,12 +255,12 @@ function dataAppender(data, _sub) {
         let date;
         let hour;
         let minutes;
-        if (createDate == null){
+        if (createDate == null) {
             date = ''
             hour = ''
             minutes = ''
         }
-        else{
+        else {
             date = createDate.slice(0, 10)
             date = date.replace(/(\d{4})-(\d\d)-(\d\d)/, "$3-$2-$1")
             hour = createDate.split('T').pop().split(':')[0]
@@ -264,14 +270,14 @@ function dataAppender(data, _sub) {
 
         let deldate;
         let delhour;
-        let delminutes ;
+        let delminutes;
         deleteDate = datas[i].delete_date;
-        if (deleteDate == null){
+        if (deleteDate == null) {
             deldate = ''
             delhour = ''
             delminutes = ''
         }
-        else{
+        else {
             deldate = deleteDate.slice(0, 10)
             deldate = deldate.replace(/(\d{4})-(\d\d)-(\d\d)/, "$3-$2-$1")
             delhour = deleteDate.split('T').pop().split(':')[0]
