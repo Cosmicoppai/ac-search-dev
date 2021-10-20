@@ -5,31 +5,6 @@ from django.db.models import Q
 from django.utils.functional import cached_property, keep_lazy
 from django.utils.timezone import now
 
-"""
-def dictfetchall(cursor):
-    
-    # Convert the list result from db into dict
-    
-    columns = [col[0] for col in cursor.description]
-    return [
-        dict(zip(columns, row))
-        for row in cursor.fetchall()]
-
-
-class CommentSearch:
-    def __init__(self, search_text):
-        self.query = "SELECT DISTINCT id, sub, author, text, date FROM app_comment WHERE UPPER(text) LIKE UPPER(%s) ORDER BY date DESC"
-        self.search_text = search_text
-
-
-    def search(self):
-        if self.search_text is not None:
-            with connection.cursor() as cursor:
-                cursor.execute(self.query, [self.search_text])
-                return dictfetchall(cursor)
-
-"""
-
 
 class CommentManager(models.Manager):
     def __init__(self):
@@ -75,19 +50,6 @@ class Comment(models.Model):
 
     objects = CommentManager()
 
-
-"""
-class PostSearch:
-    def __init__(self, search_text):
-        self.query = 'SELECT DISTINCT id, sub, author, title, text, date FROM app_post WHERE (UPPER(%s) LIKE UPPER(title) OR UPPER(text) LIKE UPPER(%s)) ORDER BY date DESC'
-        self.search_text = search_text
-
-    def search(self):
-        with connection.cursor() as cursor:
-            cursor.execute(self.query, [self.search_text, self.search_text])
-            return dictfetchall(cursor)
-
-"""
 
 
 class PostManager(models.Manager):

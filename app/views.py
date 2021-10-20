@@ -2,9 +2,10 @@ from django.views import generic
 from django.views.generic.base import View
 from .models import Post, Search
 from django.http import HttpResponse, JsonResponse
-from .db_init import create_dummy_data
+from .loaddata import create_dummy_data
 from .paginator import Paginator
 from .serializers import Serializer
+
 
 
 class HomeView(generic.TemplateView):
