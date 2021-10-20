@@ -49,8 +49,8 @@ class PostManager(models.Manager):
         super(PostManager, self).__init__()
 
     def search(self, search_text, sub):
-        return self.filter(Q(title__icontains=search_text) | Q(text__icontains=search_text), Q(sub=sub))
-        # return self.annotate(search=SearchVector('title', 'text', config='english')).filter(search=SearchQuery(search_text), sub=sub)
+        # return self.filter(Q(title__icontains=search_text) | Q(text__icontains=search_text), Q(sub=sub))
+        return self.annotate(search=SearchVector('title', 'text', config='english')).filter(search=SearchQuery(search_text), sub=sub)
 
     def count_result(self, search_text, sub):
         count = self.filter(Q(title__icontains=search_text) | Q(text__icontains=search_text), Q(sub__iexact=sub)).count()
