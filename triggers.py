@@ -4,7 +4,7 @@ import lzma
 import psycopg2
 import psycopg2.extras
 import dotenv
-from datetime import datetime as dt
+import datetime
 
 
 
@@ -37,7 +37,7 @@ class batch_insert:
 
     def do_insert(self):
         # print(f"Inserting {len(self.rows)} / {self.ins}...")
-        psycopg2.extras.execute_values(self.cur, "INSERT INTO app_post (post_id, title, text, username, sub, upvotes, create_date) VALUES %s", self.rows)
+        psycopg2.extras.execute_values(self.cur, "INSERT INTO app_post (post_id, title, text, username, sub, upvotes, create_date, delete_date) VALUES %s", self.rows)
         self.conn.commit()
         self.rows.clear()
         self.ins += 1
@@ -50,7 +50,7 @@ def create_new():
         for obj in data:
             if obj['selftext'] == '[deleted]' or obj['selftext'] == '[removed]':
                 continue
-            sql.add_row((obj['id'], obj['title'], obj['selftext'], 'ShadowGuy', 'cryptocurrency', obj['score'], dt.now()))
+            sql.add_row((obj['id'], obj['title'], obj['selftext'], 'ShadowGuy', 'cryptocurrency', obj['score'], dt.now(), datetime.datetime.now()+datetime.timedelta(days=7)))
     sql.do_insert()
 
 
