@@ -9,11 +9,10 @@ class CommentManager(models.Manager):
     def __init__(self):
         super(CommentManager, self).__init__()
         self.query = "SELECT comment_id, post_id, username, text, upvotes, create_date, delete_date" \
-                     " FROM app_comment WHERE (ts @@ websearch_to_tsquery('english', %s) AND sub=%s)"
+                     " FROM app_comment WHERE ts @@ websearch_to_tsquery('english', %s) AND sub=%s LIMIT 10000"
 
 
     def search(self, search_text, sub):
-        # return self.filter(vector_column=SearchQuery(search_text, search_type='websearch'), sub=sub)
         return self.raw(self.query, (search_text, sub))
 
 
@@ -25,13 +24,11 @@ class Comment(models.Model):
     text = models.TextField(max_length=10000)
     upvotes = models.IntegerField(default=0, verbose_name='no of upvotes')
     create_date = models.DateTimeField(auto_now_add=True, verbose_name='date on which comment is created')
-    delete_date = models.DateTimeField(blank=True, null=True, verbose_name='date on which comment is deleted')
-    # vector_column = SearchVectorField(null=True)
+    delete_date = models.DateTimeField(verbose_name='date on which comment is deleted')
 
     class Meta:
         verbose_name_plural = "Comment's"
         get_latest_by = ['-create_date']
-        # indexes = (GinIndex(fields=['vector_column']),)
 
     def __str__(self):
         return f"{self.sub} -   {self.username}   -   {self.text}"
@@ -43,10 +40,9 @@ class PostManager(models.Manager):
     def __init__(self):
         super(PostManager, self).__init__()
         self.query = "SELECT post_id, username, title, text, upvotes, image_url, create_date, delete_date" \
-                     " FROM app_post WHERE (ts @@ websearch_to_tsquery('english', %s) AND sub=%s)"
+                     " FROM app_post WHERE ts @@ websearch_to_tsquery('english', %s) AND sub=%s LIMIT 10000"
 
     def search(self, search_text, sub):
-        # return self.filter(vector_column=SearchQuery(search_text, search_type='websearch'), sub=sub)
         return self.raw(self.query, (search_text,sub))
 
 
@@ -61,12 +57,10 @@ class Post(models.Model):
     image_url = models.URLField(blank=True, null=True, verbose_name="post image url")  # default max_length of 200 is used
     create_date = models.DateTimeField(default=now, verbose_name='date on which post is created')
     delete_date = models.DateTimeField(blank=True, null=True, verbose_name='date on which post is deleted')
-    # vector_column = SearchVectorField(null=True)
 
     class Meta:
         verbose_name_plural = "Post's"
         get_latest_by = ['-create_date']
-        # indexes = (GinIndex(fields=['vector_column']), )
 
     def __str__(self):
         return f"{self.sub} -   {self.username}   -   {self.title}"
@@ -94,5 +88,5 @@ class Search:
             self.comment_result = Comment.objects.search(self.query, self.sub)
         queryset_chain = chain(self.post_result, self.comment_result)
         # sort the whole queryset in reverse (i.e new post will come first)
-        qs = sorted(queryset_chain, key=lambda instance: instance.delete_date if instance.delete_date else -inf)
+        qs = sorted(queryset_chain, key=lambda instance: instance.delete_date)
         return qs
