@@ -14,7 +14,7 @@ class CreateTrigger:
         dotenv.read_dotenv('.env')
         self.conn = psycopg2.connect(dbname=os.getenv('DB_NAME'), user=os.getenv('DB_USER'), password=os.getenv('DB_PASSWORD'))
         self.cur = self.conn.cursor()
-        self.cur.execute("ALTER TABLE app_post ADD COLUMN ts tsvector GENERATED ALWAYS AS (to_tsvector('english', coalesce('title', '') || ' ' || coalesce(text,''))) STORED")
+        self.cur.execute("ALTER TABLE app_post ADD COLUMN ts tsvector GENERATED ALWAYS AS (to_tsvector('english', coalesce(title, '') || ' ' || coalesce(text,''))) STORED")
         self.cur.execute("CREATE INDEX ts_post_idx ON app_post USING GIN (ts)")
         self.cur.execute("ALTER TABLE app_comment ADD COLUMN ts tsvector GENERATED ALWAYS AS (to_tsvector('english', text)) STORED")
         self.cur.execute("CREATE INDEX ts_comm_idx ON app_comment USING GIN (ts)")
