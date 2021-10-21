@@ -1,24 +1,20 @@
 from django.db import models
 from itertools import chain
-from django.db.models import Q
 from django.utils.functional import cached_property, keep_lazy
 from django.utils.timezone import now
-from django.contrib.postgres.search import SearchVector, SearchQuery, SearchVectorField
-from django.contrib.postgres.indexes import GinIndex
+from math import inf
 
 
 class CommentManager(models.Manager):
     def __init__(self):
         super(CommentManager, self).__init__()
+        self.query = "SELECT comment_id, post_id, username, text, upvotes, create_date, delete_date" \
+                     " FROM app_comment WHERE (ts @@ websearch_to_tsquery('english', %s) AND sub=%s)"
 
 
     def search(self, search_text, sub):
-        return self.annotate(seach=SearchVector('text')).filter(search=SearchQuery(search_text), sub=sub)
-
-    def count_result(self, search_text, sub):
-        count = self.filter(Q(text__icontains=search_text),
-                            Q(sub__iexact=sub)).count()
-        return count
+        # return self.filter(vector_column=SearchQuery(search_text, search_type='websearch'), sub=sub)
+        return self.raw(self.query, (search_text, sub))
 
 
 class Comment(models.Model):
@@ -30,13 +26,12 @@ class Comment(models.Model):
     upvotes = models.IntegerField(default=0, verbose_name='no of upvotes')
     create_date = models.DateTimeField(auto_now_add=True, verbose_name='date on which comment is created')
     delete_date = models.DateTimeField(blank=True, null=True, verbose_name='date on which comment is deleted')
-    vector_column = SearchVectorField(null=True)
+    # vector_column = SearchVectorField(null=True)
 
     class Meta:
-        ordering = ['-create_date']
         verbose_name_plural = "Comment's"
         get_latest_by = ['-create_date']
-        indexes = (GinIndex(fields=['vector_column']),)
+        # indexes = (GinIndex(fields=['vector_column']),)
 
     def __str__(self):
         return f"{self.sub} -   {self.username}   -   {self.text}"
@@ -47,14 +42,12 @@ class Comment(models.Model):
 class PostManager(models.Manager):
     def __init__(self):
         super(PostManager, self).__init__()
+        self.query = "SELECT post_id, username, title, text, upvotes, image_url, create_date, delete_date" \
+                     " FROM app_post WHERE (ts @@ websearch_to_tsquery('english', %s) AND sub=%s)"
 
     def search(self, search_text, sub):
-        # return self.filter(Q(title__icontains=search_text) | Q(text__icontains=search_text), Q(sub=sub))
-        return self.annotate(search=SearchVector('title', 'text', config='english')).filter(search=SearchQuery(search_text), sub=sub)
-
-    def count_result(self, search_text, sub):
-        count = self.filter(Q(title__icontains=search_text) | Q(text__icontains=search_text), Q(sub__iexact=sub)).count()
-        return count
+        # return self.filter(vector_column=SearchQuery(search_text, search_type='websearch'), sub=sub)
+        return self.raw(self.query, (search_text,sub))
 
 
 
@@ -68,13 +61,12 @@ class Post(models.Model):
     image_url = models.URLField(blank=True, null=True, verbose_name="post image url")  # default max_length of 200 is used
     create_date = models.DateTimeField(default=now, verbose_name='date on which post is created')
     delete_date = models.DateTimeField(blank=True, null=True, verbose_name='date on which post is deleted')
-    vector_column = SearchVectorField(null=True)
+    # vector_column = SearchVectorField(null=True)
 
     class Meta:
-        ordering = ['-create_date']
         verbose_name_plural = "Post's"
         get_latest_by = ['-create_date']
-        indexes = (GinIndex(fields=['vector_column']), )
+        # indexes = (GinIndex(fields=['vector_column']), )
 
     def __str__(self):
         return f"{self.sub} -   {self.username}   -   {self.title}"
@@ -91,39 +83,16 @@ class Search:
         self.comment_result = Comment.objects.none()
 
 
-
-    def get_model(self):
-        if self.filter == 'p':  # if filter is p(posts)
-            return Post, None
-        if self.filter == 'c':  # if filter is c(comments)
-            return None, Comment
-        if self.filter == 'pc':  # if filter is pc(posts and comments)
-            return Post, Comment
-
-
     @keep_lazy(tuple)
     def search_text(self):
-        post_model, comment_model = self.get_model()
-        try:
-            self.post_result = post_model.objects.search(self.query, self.sub)
-            self.comment_result = comment_model.objects.search(self.query, self.sub)
-        except AttributeError:
-            pass
+        if self.filter == 'p':  # if filter is p(posts)
+            self.post_result = Post.objects.search(self.query, self.sub)
+        elif self.filter == 'c':  # if filter is c(comments)
+            self.comment_result = Comment.objects.search(self.query, self.sub)
+        elif self.filter == 'pc':  # if filter is pc(posts and comments)
+            self.post_result = Post.objects.search(self.query, self.sub)
+            self.comment_result = Comment.objects.search(self.query, self.sub)
         queryset_chain = chain(self.post_result, self.comment_result)
-        # sort the whole queryset in reverse (i.e new entry will come first)
-        qs = sorted(queryset_chain, key=lambda instance: instance.create_date, reverse=True)
+        # sort the whole queryset in reverse (i.e new post will come first)
+        qs = sorted(queryset_chain, key=lambda instance: instance.delete_date if instance.delete_date else -inf)
         return qs
-
-
-    """
-    @cached_property
-    def count_result(self):
-        total_no_of_results = 0
-        _models = self.get_model()
-        for model in _models:
-            try:
-                total_no_of_results += model.objects.count_result(self.query, self.sub)
-            except AttributeError:
-                pass
-        return total_no_of_results
-        """

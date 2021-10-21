@@ -2,7 +2,6 @@ from django.views import generic
 from django.views.generic.base import View
 from .models import Post, Search
 from django.http import HttpResponse, JsonResponse
-from .loaddata import create_dummy_data
 from .paginator import Paginator
 from .serializers import Serializer
 
@@ -19,8 +18,8 @@ class SearchView(generic.TemplateView):
 
 class SearchApi(View):
     paginate_by = 25
-    count = 0
     paginate_orphans = 4
+    count = 0
 
     def get(self, *args, **kwargs):
         page_num = self.request.GET.get('page', 1)
@@ -45,9 +44,3 @@ class SearchApi(View):
     def paginate(self, queryset, page_num=1):
         paginator = Paginator(queryset, self.paginate_by, self.paginate_orphans, self.count)
         return paginator.get_page(page_num)
-
-
-
-def test(request):
-    create_dummy_data()
-    return HttpResponse("<h1>Successfully created dummy data</h1>")

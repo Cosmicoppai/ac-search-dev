@@ -1,6 +1,5 @@
 import os
 from pathlib import Path
-# from .secrets import *
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,10 +23,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django.contrib.postgres',
-
-    # 3rd party
-    # 'debug_toolbar',
-    # Local
     'app'
     ]
 
@@ -36,20 +31,12 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     ]
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-"""
-INTERNAL_IPS = [
-    # ...
-    '127.0.0.1',
-    # ...
-]
-"""
 
 ROOT_URLCONF = 'core.urls'
 TEMPLATE_DIR = os.path.join(CORE_DIR, "core/templates")  # ROOT dir for templates

@@ -7,7 +7,6 @@ urlpatterns = [
     path('', views.HomeView.as_view(), name='home'),
     path('api', views.SearchApi.as_view(), name='search-api'),
     path('search', views.SearchView.as_view(), name='search-post'),
-    path('dummy', views.test, name="create-dummy-data")
     ]
 
 
