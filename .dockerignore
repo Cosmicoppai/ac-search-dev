@@ -4,6 +4,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+ac-search-dev/app/migrations
+
 # C extensions
 *.so
 
@@ -138,5 +140,3 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-ac-search-dev/app/migrations
-ac-search-dev/one-million-reddit-confessions.csv
