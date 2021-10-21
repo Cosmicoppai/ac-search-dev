@@ -50,8 +50,7 @@ window.onload = () => {
         }
         document.getElementById('search').value = query;
         document.getElementById('subreddits').value = sub;
-        let start = performance.now()
-        apiCall(url, sub, start)
+        apiCall(url, sub)
     }
 }
 
@@ -77,8 +76,7 @@ function buttonClick() {
         history.pushState(null, "", '/search?f=' + filterValue + '&sub=' + form + '&q=' + search + '&page=1');
         let url = window.location.href
         url = url.split('?').pop();
-        let start = performance.now()
-        apiCall(url, start)
+        apiCall(url)
     }
     else validation();
 }
@@ -93,7 +91,8 @@ function executionTime(sec){
     document.getElementById('execTime').innerHTML = 'Execution: '+ sec;
 }
 // api call function
-function apiCall(url, sub, start) {
+function apiCall(url, sub) {
+    let start = performance.now()
     validation();
     clearBox('postBox')
     clearBox('commentBox')
@@ -110,13 +109,13 @@ function apiCall(url, sub, start) {
         .then(response => response.json())
         .then(data => {
             document.getElementById('loading').style.display = "none";
-            let end = performance.now()
-            end = end - start
-            let precision = Math.round(end)
-            // let min = Math.floor((end / 1000 / 60) << 0)
-            let sec = Math.floor((end / 1000) % 60);
-            // console.log(sec+ '.'+ precision+' seconds');
-            sec = sec+ '.'+ precision+' seconds'
+            // console.log(start)
+            let end =performance.now()
+            // console.log(end)
+            let time = end - start
+            time = Math.round(time)
+            let sec = Math.floor((time / 1000) % 60);
+            sec = sec+ '.'+ time+' seconds'
             executionTime(sec)
             dataCollection(data);
             dataAppender(data, sub);
@@ -128,8 +127,8 @@ function dataCollection(data) {
     let previous = data.prev
     let next = data.next
     let count = data.count
-    let paginatedValue = 3;
-    let paginatedOrphan = 1;
+    let paginatedValue = 25;
+    let paginatedOrphan = 4;
     let totalPage;
     let pageNumber;
     // to display the next, previous, last and first
@@ -199,10 +198,14 @@ function dataCollection(data) {
         document.getElementById('last').style.display = 'block';
         document.getElementById('first').style.pointerEvents = 'none'
         document.getElementById('previous').style.pointerEvents = 'none'
+        document.getElementById('first').style.opacity = '0'
+        document.getElementById('previous').style.opacity = '0'
     }
     else if (next == null) {
         document.getElementById('next').style.pointerEvents = 'none'
         document.getElementById('last').style.pointerEvents = 'none'
+        document.getElementById('next').style.opacity = '0'
+        document.getElementById('last').style.opacity = '0'
         document.getElementById('first').style.display = 'block';
         document.getElementById('previous').style.display = 'block';
     }
