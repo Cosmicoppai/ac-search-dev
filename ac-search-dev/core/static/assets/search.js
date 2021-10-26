@@ -1,3 +1,10 @@
+//buttonclick on enter presskey
+function handle(e) {
+    if (e.keyCode === 13) {
+        e.preventDefault();
+        buttonClick()
+    }
+}
 // validation function to check for empty values
 function validation() {
     let search = document.getElementById('search');
@@ -5,7 +12,7 @@ function validation() {
     let comment = document.getElementById('comments');
     let postValid = document.getElementById('postValid');
     let commentValid = document.getElementById('commentValid');
-    if (search.value == '') {
+    if (search.value === '') {
         search.style.border = '2px solid red'
         document.getElementById('invalidText2').style.display = 'block'
     }
@@ -14,7 +21,7 @@ function validation() {
         document.getElementById('invalidText2').style.display = 'none'
 
     }
-    if (post.checked == false && comment.checked == false) {
+    if (post.checked === false && comment.checked === false) {
         postValid.style.border = '2px solid red'
         commentValid.style.border = '2px solid red'
         document.getElementById('invalidText1').style.display = 'block'
@@ -37,6 +44,7 @@ window.onload = () => {
     let query = argArray.has('q') ? argArray.get('q') : '' // if query exists set query='query from url' else ''
     let filter = argArray.has('f') ? argArray.get('f') : ''
     let sub = argArray.has('sub') ? argArray.get('sub') : ''
+    let page = argArray.has('page') ? argArray.get('page') : ''
     //to check the conditions before calling the api
     if (query !== '' && (filter[0] == "c" || filter[0] == "p") && sub !== '') {
         validation();
@@ -50,7 +58,7 @@ window.onload = () => {
         }
         document.getElementById('search').value = query;
         document.getElementById('subreddits').value = sub;
-        apiCall(url, sub)
+        apiCall(sub)
     }
 }
 
@@ -74,9 +82,8 @@ function buttonClick() {
     //to check the conditions before calling the api
     if (search != '' && (post.checked || comment.checked) && form != '') {
         history.pushState(null, "", '/search?f=' + filterValue + '&sub=' + form + '&q=' + search + '&page=1');
-        let url = window.location.href
-        url = url.split('?').pop();
-        apiCall(url)
+        apiCall()
+
     }
     else validation();
 }
@@ -87,17 +94,27 @@ function clearBox(elementID) {
     document.getElementById(elementID).style = "";
 }
 
-function executionTime(sec){
-    document.getElementById('execTime').innerHTML = 'Execution: '+ sec;
+function executionTime(sec) {
+    document.getElementById('execTime').innerHTML = 'Execution: ' + sec;
 }
 // api call function
-function apiCall(url, sub) {
+function apiCall(sub) {
+    let url = window.location.href;
+    url = url.split('?').pop();
     let start = performance.now()
     validation();
     clearBox('postBox')
     clearBox('commentBox')
     clearBox('pagination')
     clearBox('results')
+    const argArray = new URLSearchParams(url)
+    let page = argArray.has('page') ? argArray.get('page') : ''
+    if (page === '') {
+        let url1 = 'search?' + url + '&page=1'
+        history.pushState(null, "", url1);
+        url =  url + '&page=1'
+        // console.log(url)
+    }
     document.getElementById('loading').style.display = "block";
     fetch('/api?' + url, {
         method: 'GET',
@@ -110,12 +127,12 @@ function apiCall(url, sub) {
         .then(data => {
             document.getElementById('loading').style.display = "none";
             // console.log(start)
-            let end =performance.now()
+            let end = performance.now()
             // console.log(end)
             let time = end - start
             time = Math.round(time)
             let sec = Math.floor((time / 1000) % 60);
-            sec = sec+ '.'+ time+' seconds'
+            sec = sec + '.' + time + ' seconds'
             executionTime(sec)
             dataCollection(data);
             dataAppender(data, sub);
@@ -287,7 +304,7 @@ function dataAppender(data, _sub) {
         let delhour;
         let delminutes;
         deleteDate = datas[i].delete_date;
-        if (deleteDate == null) {
+        if (deleteDate === null) {
             deldate = ''
             delhour = ''
             delminutes = ''
@@ -369,10 +386,10 @@ function dataAppender(data, _sub) {
     
     <!--                READ MORE AND DATE -->
     <div class="text-end mt-4 mx-2" style="font-size: 0.9rem;">
-    <span class="text-muted" data-bs-toggle="tooltip" data-bs-placement="top" title="Created Date" style="font-size: 12px; cursor:default;">
+    <span class="text-muted" data-bs-toggle="tooltip" data-bs-placement="top" title="Create Date" style="font-size: 12px; cursor:default;">
           ${date} ${hour}${minutes}               
     </span>
-    <span class="text-muted" data-bs-toggle="tooltip" data-bs-placement="top" title="Deleted Date" style="font-size: 12px; cursor:default;">
+    <span class="text-muted" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete Date" style="font-size: 12px; cursor:default;">
         ${deldate} ${delhour}${delminutes} 
         </span>
                         <button   class="nav-toggle  mx-2  border-0 myBtn" style="margin-left: -30px; cursor: pointer;" onclick="myFunction('${post_id}')"  >
@@ -433,10 +450,10 @@ function dataAppender(data, _sub) {
                 <small class="mx-1 "><i class="fas fa-thumbs-up"></i></small>
                   <small class="mt-1 ">${upVotes}</small>
                 </p>
-                <span class="text-muted" data-bs-toggle="tooltip" data-bs-placement="top" title="Created Date" style="font-size: 12px; cursor:default;">
+                <span class="text-muted" data-bs-toggle="tooltip" data-bs-placement="top" title="Create Date" style="font-size: 12px; cursor:default;">
                         ${date} ${hour}${minutes}
                         </span>
-                        <span class="text-muted" data-bs-toggle="tooltip" data-bs-placement="top" title="Deleted Date" style="font-size: 12px; cursor:default;">
+                        <span class="text-muted" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete Date" style="font-size: 12px; cursor:default;">
                         ${deldate} ${delhour}${delminutes} 
                             </span>
                     <button   class="nav-toggle  mx-2 border-0 myBtn " style="cursor:pointer" onclick="myFunction('${comment_id}')"  >

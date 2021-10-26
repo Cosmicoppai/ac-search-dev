@@ -9,7 +9,6 @@ function switchTheme(e) {
         body.setAttribute('data-theme', 'dark');
         light.removeAttr('hidden')
         dark.attr('hidden', true)
-
     }
     else {
         body.setAttribute('data-theme', 'light');
