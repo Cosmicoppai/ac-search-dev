@@ -18,6 +18,7 @@ ENV SECRET=${SECRET}
 COPY ./ac-search-dev /ac-search-dev
 
 WORKDIR /ac-search-dev
+
 EXPOSE 9000
 
 RUN mkdir static && \

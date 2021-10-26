@@ -9,6 +9,8 @@ services:
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
+    env_file:
+      - env/db.env
     restart: always
 
   # Django App
@@ -16,11 +18,11 @@ services:
     build:
       context: .
     volumes:
-    - static-data:/static
+    - static-data:/ac-search-dev/static
     depends_on:
       - database
     env_file:
-      - .env
+      - env/backend.env
     restart: always
 
   # Nginx
@@ -48,6 +50,17 @@ services:
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     depends_on:
       - nginx
+
+  # dataset
+  dataset:
+    image: cosmicoppai/dataset
+    restart: on-failure
+    depends_on:
+      - backend
+      - database
+    env_file:
+      - env/dataset.env
+
 
 volumes:
   db:
