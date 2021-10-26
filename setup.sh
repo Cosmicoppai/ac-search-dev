@@ -22,5 +22,5 @@ compose_release() {
     fi
 
     
-cd ac-search-dev && ./init-letsencrypt.sh
+chmod -R +x ./init-letsencrypt.sh && ./init-letsencrypt.sh
 docker-compose up
