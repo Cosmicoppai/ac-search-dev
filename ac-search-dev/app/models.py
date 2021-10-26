@@ -1,8 +1,7 @@
 from django.db import models
 from itertools import chain
-from django.utils.functional import cached_property, keep_lazy
+from django.utils.functional import keep_lazy
 from django.utils.timezone import now
-from math import inf
 
 
 class CommentManager(models.Manager):
@@ -56,7 +55,7 @@ class Post(models.Model):
     upvotes = models.IntegerField(default=0, verbose_name='no of upvotes')
     image_url = models.URLField(blank=True, null=True, verbose_name="post image url")  # default max_length of 200 is used
     create_date = models.DateTimeField(default=now, verbose_name='date on which post is created')
-    delete_date = models.DateTimeField(blank=True, null=True, verbose_name='date on which post is deleted')
+    delete_date = models.DateTimeField(verbose_name='date on which post is deleted')
 
     class Meta:
         verbose_name_plural = "Post's"
