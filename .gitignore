@@ -139,4 +139,4 @@ dmypy.json
 cython_debug/
 
 ac-search-dev/app/migrations
-ac-search-dev/one-million-reddit-confessions.csv
+dataset
