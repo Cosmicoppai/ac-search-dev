@@ -7,7 +7,7 @@ from django.utils.timezone import now
 class CommentManager(models.Manager):
     def __init__(self):
         super(CommentManager, self).__init__()
-        self.query = "SELECT comment_id, post_id, username, text, upvotes, create_date, delete_date" \
+        self.query = "SELECT comment_id, post_id, username, text, sub, upvotes, create_date, delete_date" \
                      " FROM app_comment WHERE ts @@ websearch_to_tsquery('english', %s) AND sub=%s LIMIT 10000"
 
 
@@ -38,7 +38,7 @@ class Comment(models.Model):
 class PostManager(models.Manager):
     def __init__(self):
         super(PostManager, self).__init__()
-        self.query = "SELECT post_id, username, title, text, upvotes, image_url, create_date, delete_date" \
+        self.query = "SELECT post_id, username, title, text, sub, upvotes, image_url, create_date, delete_date" \
                      " FROM app_post WHERE ts @@ websearch_to_tsquery('english', %s) AND sub=%s LIMIT 10000"
 
     def search(self, search_text, sub):
