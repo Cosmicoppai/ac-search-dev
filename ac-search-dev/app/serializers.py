@@ -11,13 +11,13 @@ class Serializer:
             if item.__class__.__name__ == 'Post':
                 self.result.append(
                     dict(type='post', post_id=item.post_id,
-                         title=item.title, text=item.text,
+                         title=item.title, text=item.text, sub=item.sub,
                          upvotes=item.upvotes, image_url=item.image_url, username=item.username,
                          create_date=item.create_date, delete_date=item.delete_date))
             else:
                 self.result.append(
                     dict(type='comment', post_id=item.post_id,
                          comment_id=item.comment_id,
-                         text=item.text, upvotes=item.upvotes, username=item.username,
+                         text=item.text, sub=item.sub, upvotes=item.upvotes, username=item.username,
                          create_date=item.create_date, delete_date=item.delete_date))
         return self.result
