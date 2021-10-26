@@ -1,4 +1,4 @@
-//buttonclick on enter presskey
+//button click on enter press
 function handle(e) {
     if (e.keyCode === 13) {
         e.preventDefault();
@@ -58,7 +58,7 @@ window.onload = () => {
         }
         document.getElementById('search').value = query;
         document.getElementById('subreddits').value = sub;
-        apiCall(sub)
+        apiCall()
     }
 }
 
@@ -98,7 +98,7 @@ function executionTime(sec) {
     document.getElementById('execTime').innerHTML = 'Execution: ' + sec;
 }
 // api call function
-function apiCall(sub) {
+function apiCall() {
     let url = window.location.href;
     url = url.split('?').pop();
     let start = performance.now()
@@ -135,7 +135,7 @@ function apiCall(sub) {
             sec = sec + '.' + time + ' seconds'
             executionTime(sec)
             dataCollection(data);
-            dataAppender(data, sub);
+            dataAppender(data);
         });
 }
 
@@ -227,7 +227,7 @@ function dataCollection(data) {
         document.getElementById('previous').style.display = 'block';
     }
 
-    //to send href to the a tag of next,last,previousand first according to the page number
+    //to send href to the a tag of next,last,previous and first according to the page number
     let url = window.location.href
     url = url.replace(/&page.+$/, `&page=${pageNumber + 1}`)
     document.getElementById('next').href = url
@@ -239,7 +239,7 @@ function dataCollection(data) {
     document.getElementById('first').href = url
 }
 
-// function to control readmore and read less inside the div
+// function to control read more and read less inside the div
 function myFunction(id) {
     let dots = document.querySelector(` .card[data="${id}"] .dots`);
     let moreText = document.querySelector(`.card[data="${id}"] .more`);
@@ -259,7 +259,7 @@ function myFunction(id) {
 }
 
 // function to append the div inside the content according to the results
-function dataAppender(data, _sub) {
+function dataAppender(data,) {
     let datas = data.data
     let title;
     let type;
@@ -271,7 +271,7 @@ function dataAppender(data, _sub) {
     let deleteDate;
     let imageUrl;
     let upVotes;
-    let sub = _sub;
+    let sub;
     // for loop to show the values in different div tag
     for (var i = 0; i < datas.length; i++) {
         type = datas[i].type; //type of data (post or comment)
@@ -280,6 +280,7 @@ function dataAppender(data, _sub) {
         //text and title
         title = datas[i].title;
         text = datas[i].text;
+        sub = datas[i].sub;
         let shortText = text.slice(0, 150)//shortening the text for comment section
         //distributing date according to create and delete date
         //createDate
