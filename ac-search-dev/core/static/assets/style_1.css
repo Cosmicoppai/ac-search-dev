@@ -1,3 +1,4 @@
+
 @import url(https://fonts.googleapis.com/css?family=Montserrat);
 
 
@@ -39,13 +40,10 @@ body {
 /*Simple css to style it like a toggle switch*/
 .theme-switch-wrapper {
   display: flex;
-  align-items: center;}
+  align-items: center;
 
-  em {
-    margin-left: 10px;
-    font-size: 1rem;
-  }
-
+  
+}
 .theme-switch {
   display: inline-block;
   height: 34px;
@@ -112,8 +110,7 @@ input:checked + .slider:before {
     margin: 3px 3px;
 }
 
-    background: var(--background-primary);
-    color: var(--color-primary);
+    
 
 .blog-comment::before,
 .blog-comment::after,
