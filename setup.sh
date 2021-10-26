@@ -24,4 +24,3 @@ compose_release() {
 
 chmod -R +x ./init-letsencrypt.sh && ./init-letsencrypt.sh $1
 docker-compose up -d
-docker run --name dataset --network ac-search-dev_default --rm --env-file ./env/dataset.env -d cosmicoppai/dataset
