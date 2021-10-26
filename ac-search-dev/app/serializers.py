@@ -1,6 +1,3 @@
-from .models import Post, Comment
-
-
 class Serializer:
     def __init__(self, queryset):
         self.queryset = queryset
