@@ -1,4 +1,4 @@
-FROM ngi
+FROM nginxinc/nginx-unprivileged:1-alpine
 
 COPY ./default.conf /etc/nginx/default.conf
 COPY ./run.sh /run.sh
