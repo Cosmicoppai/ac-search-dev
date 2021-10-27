@@ -1,4 +1,4 @@
-FROM nginxinc/nginx-unprivileged:1-alpine
+FROM ngi
 
 COPY ./default.conf /etc/nginx/default.conf
 COPY ./run.sh /run.sh
@@ -15,6 +15,8 @@ RUN mkdir -p /vol/static && \
     chmod 755 /var/www/certbot && \
     touch /etc/nginx/conf.d/default.conf && \
     chown nginx:nginx /etc/nginx/conf.d/default.conf && \
+    chown nginx:nginx /etc/letsencrypt/ && \
+    chown nginx:nginx /var/www/certbot/ && \
     chmod +x /run.sh
 
 

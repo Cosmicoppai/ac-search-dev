@@ -23,4 +23,3 @@ compose_release() {
 
 
 chmod -R +x ./init-letsencrypt.sh && ./init-letsencrypt.sh $1
-docker-compose up -d
