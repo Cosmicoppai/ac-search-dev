@@ -7,10 +7,10 @@ ENV HOST=${HOST}
 
 RUN mkdir -p /vol/static && \
     chmod 755 /vol/static && \
-    mkdir -p /etc/letsencrypt && \
-    chmod 755 /etc/letsencrypt && \
+    mkdir -p /etc/letsencrypt/live && \
+    sudo chmod -R 755 /etc/letsencrypt/live/ && \
     mkdir -p /var/www/certbot && \
-    chmod 755 /var/www/certbot && \
+    sudo chmod -R 755 /var/www/certbot && \
     touch /etc/nginx/conf.d/default.conf && \
     chmod +x /run.sh
 
