@@ -37,7 +37,7 @@ services:
     - static-data:/vol/static
     - ./data/certbot/conf:/etc/letsencrypt
     - ./data/certbot/www:/var/www/certbot
-    command: "/bin/sh -c './run.sh; while :; do sleep 6h && wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    command: "/bin/sh -c 'chmod +x ./run.sh; ./run.sh; while :; do sleep 6h && wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     restart: always
     depends_on:
       - backend
