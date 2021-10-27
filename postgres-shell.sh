@@ -1,1 +1,1 @@
-docker exec -it database psql -h database -d ac-search -U fireice
+docker exec -it ac-search-dev_database_1 psql -h database -d ac-search -U fireice
