@@ -1,3 +1,30 @@
+//toggle switch between dark and light mode
+const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
+let image
+function switchTheme(e) {
+    apiCall();
+    var body = document.getElementsByTagName('body')[0];
+    var light = $('#light-mode')
+    var dark = $('#dark-mode')
+    image = 'white'
+
+    if (e.target.checked) {
+        body.setAttribute('data-theme', 'dark');
+        light.removeAttr('hidden')
+        dark.attr('hidden', true)
+        image = 'dark'
+    }
+    else {
+        body.setAttribute('data-theme', 'light');
+        light.attr('hidden', true)
+        dark.removeAttr('hidden')
+        image = 'white'
+    }
+
+}
+
+toggleSwitch.addEventListener('change', switchTheme, false);
+
 //button click on enter press
 function handle(e) {
     if (e.keyCode === 13) {
@@ -44,7 +71,6 @@ window.onload = () => {
     let query = argArray.has('q') ? argArray.get('q') : '' // if query exists set query='query from url' else ''
     let filter = argArray.has('f') ? argArray.get('f') : ''
     let sub = argArray.has('sub') ? argArray.get('sub') : ''
-    let page = argArray.has('page') ? argArray.get('page') : ''
     //to check the conditions before calling the api
     if (query !== '' && (filter[0] == "c" || filter[0] == "p") && sub !== '') {
         validation();
@@ -80,7 +106,7 @@ function buttonClick() {
         filterValue = 'c'
     }
     //to check the conditions before calling the api
-    if (search != '' && (post.checked || comment.checked) && form != '') {
+    if (search !== '' && (post.checked || comment.checked) && form !== '') {
         history.pushState(null, "", '/search?f=' + filterValue + '&sub=' + form + '&q=' + search + '&page=1');
         apiCall()
 
@@ -259,7 +285,7 @@ function myFunction(id) {
 }
 
 // function to append the div inside the content according to the results
-function dataAppender(data,) {
+function dataAppender(data) {
     let datas = data.data
     let title;
     let type;
@@ -319,13 +345,16 @@ function dataAppender(data,) {
         }
         //Image for the post tag
         imageUrl = datas[i].image_url;
-        let image
+        let mode = image
         if (imageUrl == null) {
-            image = 'https://cdn-icons-png.flaticon.com/512/2749/2749271.png'
+             if(mode == 'dark'){
+                 imageUrl = '/static/assets/imgs/notfound.png'
+             }
+             else{
+                imageUrl = '/static/assets/imgs/not-found.png'
+             }
         }
-        else {
-            image = imageUrl
-        }
+
         upVotes = datas[i].upvotes;//upvotes from the data
         username = datas[i].username;//username
 
@@ -364,7 +393,7 @@ function dataAppender(data,) {
             <!--                    THUMBNAIL -->
                 <div class="col-3  text-center">
                 <img class="img thumbnail" width='75px' height="55px"
-                src=${image} alt="Image not found" />
+                src=${imageUrl} alt="Image not found" />
                     <p class="text-muted mb-0 p-0 me-5 ">
                     </p>
                     <small class="mx-1  mb-0 p-0 "><i class="fas fa-thumbs-up"></i></small>
