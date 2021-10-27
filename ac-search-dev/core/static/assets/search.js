@@ -2,7 +2,14 @@
 const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
 let image
 function switchTheme(e) {
-    apiCall();
+    let search = document.getElementById('search').value;
+    let post = document.getElementById('posts');
+    let comment = document.getElementById('comments');
+    let form = document.getElementById('subreddits').value;
+    //to check the conditions before calling the api
+    if (search !== '' && (post.checked || comment.checked) && form !== '') {
+        apiCall();
+    }
     var body = document.getElementsByTagName('body')[0];
     var light = $('#light-mode')
     var dark = $('#dark-mode')
@@ -348,10 +355,10 @@ function dataAppender(data) {
         let mode = image
         if (imageUrl == null) {
              if(mode == 'dark'){
-                 imageUrl = '/static/assets/imgs/notfound.png'
+                 imageUrl = '/static/assets/imgs/notfound_dark.png'
              }
              else{
-                imageUrl = '/static/assets/imgs/not-found.png'
+                imageUrl = '/static/assets/imgs/notfound_light.png'
              }
         }
 
