@@ -25,17 +25,19 @@ services:
 
   # Nginx
   nginx:
-    build:
-      context: ./proxy
+    image: nginx:1.21.3-alpine
     ports:
     - 443:443
     - 80:80
     environment:
       - HOST=${HOST}
     volumes:
+    - ./proxy/default.conf:/etc/nginx/default.conf
+    - ./proxy/run.sh:/run.sh
     - static-data:/vol/static
     - ./data/certbot/conf:/etc/letsencrypt
     - ./data/certbot/www:/var/www/certbot
+    command: "/bin/sh -c './run.sh; while :; do sleep 6h && wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     restart: always
     depends_on:
       - backend
